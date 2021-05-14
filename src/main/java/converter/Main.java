@@ -32,11 +32,11 @@ public class Main {
             LOGGER.debug("filenameWithRegExps={}", filenameWithRules);
 
             //If files exists
-            if (FileUtils.fileCheck(filenameForConvert) && FileUtils.fileCheck(filenameWithRules)) {
+            if (FileUtils.checkFileExist(filenameForConvert) && FileUtils.checkFileExist(filenameWithRules)) {
                 //Load rules from file
                 Map<String, String> rules = FileUtils.getRulesFromFile(filenameWithRules);
                 LOGGER.info("Loaded rules: " + rules.entrySet().size());
-
+                //Send file and rules for convert
                 FileUtils.convertFile(filenameForConvert, rules);
             }
         }

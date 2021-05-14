@@ -16,7 +16,7 @@ public class FileUtils {
     private FileUtils() {
     }
 
-    public static boolean fileCheck(String filename) {
+    public static boolean checkFileExist(String filename) {
         if (Files.exists(Paths.get(filename)) && !Files.isDirectory(Paths.get(filename))) {
             LOGGER.debug("File \"{}\" is exist", filename);
             return true;
@@ -41,6 +41,7 @@ public class FileUtils {
                 LOGGER.error("Error while trying to insert value into Map<String,String> rules=\"{}\"", lineRead);
             }
         }
+        is.close();
         return rules;
     }
 
@@ -63,24 +64,27 @@ public class FileUtils {
                 pos += convertString(buffer, true, rules);
             }
         }
+        raf.close();
     }
 
-    private static int convertString(byte[] buffer, boolean last, Map<String, String> rules) {
+    public static int convertString(byte[] buffer, boolean last, Map<String, String> rules) {
         String string;
         LOGGER.debug("last={}", last);
         //Reading to the last space, because the word may not be read completely
         if (!last) {
-            string = new String(buffer);
+            string = new String(buffer,StandardCharsets.UTF_8);
+            System.out.println(string);
             string = string.substring(0, string.lastIndexOf(" "));
             LOGGER.debug("string=\"{}\"", string);
         } else {
-            string = new String(buffer);
+            string = new String(buffer,StandardCharsets.UTF_8);
             LOGGER.debug("string=\"{}\"", string);
         }
 
         for (Map.Entry<String, String> rule : rules.entrySet()) {
             string = string.replaceAll(rule.getKey(), rule.getValue());
         }
+        System.out.println(string);
         return string.getBytes(StandardCharsets.UTF_8).length;
     }
 }
